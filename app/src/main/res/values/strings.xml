@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">asbamboo android demo</string>
+    <string name="pay_button">立即支付(demo)</string>
+    <string name="alipay_button">支付宝支付</string>
+    <string name="wxpay_button">微信支付</string>
+    <string name="paymethod_not_supported">不支持的支付方式</string>
+</resources>
