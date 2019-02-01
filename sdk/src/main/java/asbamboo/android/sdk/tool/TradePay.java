@@ -1,11 +1,17 @@
 package asbamboo.android.sdk.tool;
 
+import android.arch.core.util.Function;
+import android.content.Context;
+
+import asbamboo.android.alipay.*;
 import asbamboo.java.sdk.model.TradePayRequest;
-import asbamboo.java.sdk.model.TradePayResponse;
+//import asbamboo.java.sdk.model.TradePayResponse;
 
 public class TradePay {
 
     private TradePayRequest api;
+
+    private FunctionalInterface success;
 
     public TradePay(){
         this.api = new TradePayRequest();
@@ -51,12 +57,41 @@ public class TradePay {
         return this.api.post(false)();
     }
 
-    public String execute(){
-        TradePayResponse api_response = this.apiRequest();
-        if(api_response.getChannel().equals("ALIPAY_APP")){
+    public void onSuccess(FunctionalInterface callback){
+        this.success    = callback;
+    }
 
-        }
-        if(api_response.getChannel().equals("WXPAY_APP")){
+    public void execute(final Context context){
+//        TradePayResponse api_response = this.apiRequest();
+        if(api_response.getChannel().equals("ALIPAY_APP")){
+            asbamboo.android.alipay.Client client = new asbamboo.android.alipay.Client();
+            client.pay(context, this.api, new asbamboo.android.alipay.Client.CallbackHandler(){
+
+                public asbamboo.android.alipay.Client.CallbackHandler(TradePay trade_pay){
+                    this.trade_pay = trade_pay;
+                }
+
+                @Override
+                public void onSuccess() {
+                    this.trade_pay.success();
+                }
+
+                @Override
+                public void onError() {
+
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+
+                @Override
+                public void onDealing() {
+
+                }
+            });
+        }if(api_response.getChannel().equals("WXPAY_APP")){
 
         }
     }
