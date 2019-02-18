@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import asbamboo.android.sdk.tool.TradePay;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TradePay.AcvivityInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         String channel;
         switch (v.getId()){
             case R.id.alipay_button:
-                channel = "ALIPAT_APP";
+                channel = "ALIPAY_APP";
                 break;
             case R.id.wxpay_button:
                 channel = "WXPAY_APP";
@@ -33,12 +33,15 @@ public class MainActivity extends AppCompatActivity {
         tool.setChannel(channel);
         tool.setOutTradeNo("12345465467879");
         tool.setTitle("支付测试");
-        tool.setTotalFee("1");
+        tool.setTotalFee(1);
         tool.setClientIp("127.0.0.1");
 //        tool.setNotifyUrl("notify_url");
         tool.setSign("签名");
-        String result = tool.execute();
-        //你应在需要在你的服务端处理支付结果,并生成对应的客户端显示信息.
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        tool.execute(this);
+    }
+
+    public void onPaySuccess(String json)
+    {
+        Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
     }
 }

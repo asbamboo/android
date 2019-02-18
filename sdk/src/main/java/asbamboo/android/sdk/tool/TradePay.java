@@ -1,17 +1,15 @@
 package asbamboo.android.sdk.tool;
 
-import android.arch.core.util.Function;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
-import asbamboo.android.alipay.*;
 import asbamboo.java.sdk.model.TradePayRequest;
-//import asbamboo.java.sdk.model.TradePayResponse;
 
 public class TradePay {
 
-    private TradePayRequest api;
 
-    private FunctionalInterface success;
+    private TradePayRequest api;
 
     public TradePay(){
         this.api = new TradePayRequest();
@@ -53,45 +51,18 @@ public class TradePay {
         this.api.request_data.put("sign", sign);
     }
 
-    public TradePayResponse apiRequest(){
-        return this.api.post(false)();
+    public interface AcvivityInterface{
+        void onPaySuccess(String json);
     }
 
-    public void onSuccess(FunctionalInterface callback){
-        this.success    = callback;
-    }
+    public void execute(AcvivityInterface context){
+        if (this.api.request_data.get("channel").equals("ALIPAY_APP")) {
+            asbamboo.android.sdk.alipay.Client client = new asbamboo.android.sdk.alipay.Client();
 
-    public void execute(final Context context){
-//        TradePayResponse api_response = this.apiRequest();
-        if(api_response.getChannel().equals("ALIPAY_APP")){
-            asbamboo.android.alipay.Client client = new asbamboo.android.alipay.Client();
-            client.pay(context, this.api, new asbamboo.android.alipay.Client.CallbackHandler(){
+            final TradePay trade_pay = this;
+            client.pay(context, this.api);
 
-                public asbamboo.android.alipay.Client.CallbackHandler(TradePay trade_pay){
-                    this.trade_pay = trade_pay;
-                }
-
-                @Override
-                public void onSuccess() {
-                    this.trade_pay.success();
-                }
-
-                @Override
-                public void onError() {
-
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-
-                @Override
-                public void onDealing() {
-
-                }
-            });
-        }if(api_response.getChannel().equals("WXPAY_APP")){
+        } else if (this.api.request_data.get("channel").equals("WXPAY_APP")) {
 
         }
     }

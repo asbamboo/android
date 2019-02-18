@@ -1,1 +1,1 @@
-include ':app', ':sdk', ':alipay'
+include ':app', ':sdk'
