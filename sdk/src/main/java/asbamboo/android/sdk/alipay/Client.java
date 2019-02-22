@@ -76,7 +76,8 @@ public class Client {
                     alipay_params           = alipay_params.substring(0, alipay_params.length() - 1);
 
                     PayTask pay_task = new PayTask((Activity) context);
-                    final Map<String, String> alipay_result = pay_task.payV2(alipay_params, true);
+                    Map<String, String> alipay_result = pay_task.payV2(alipay_params, true);
+
                     Log.d("alipay result", alipay_result.toString());
 
                     /**
@@ -93,16 +94,20 @@ public class Client {
                             req_data.put("resultStatus", alipay_result.get("resultStatus"));
                             req_data.put("memo", alipay_result.get("memo"));
 
-                            Request request     = new Request(req_data);
-                            Response response   = request.post();
-                            Log.d("return response", response.toString());
-                            Configure.API_URL   = org_api_url;
-                            if(response.getDecodedData().get("status").toString() == "success"){
-                                callresult  = "{\"status\":\"success\", \"message\":\"支付成功.\", \"pay_info\":"+response.getDecodedData().get("data")+"}";
+                            Request req     = new Request(req_data);
+                            Response rep    = req.post();
+                            Log.d("return rep", rep.toString());
+                            if(rep.getIsSuccess()){
+                                Map<String, Object> callresult_map  = new HashMap<>();
+                                callresult_map.put("status", "success");
+                                callresult_map.put("message", "支付成功");
+                                callresult_map.put("pay_info", rep.getDecodedData().get("data"));
+                                callresult  = Json.encode(callresult_map);
                             }else{
                                 callresult  = "{\"status\":\"failed\", \"message\":\"支付结果存在异常.\", \"pay_info\":null}";
                             }
 
+                            Configure.API_URL   = org_api_url;
                         }else if(alipay_result.get("resultStatus").equals(ALIPAY_STATUS_PAYING)){
                             callresult  = "{\"status\":\"paying\", \"message\":\"正在处理中，支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态.\", \"pay_info\":null}";
                         }else if(alipay_result.get("resultStatus").equals(ALIPAY_STATUS_FAILED)){
@@ -120,16 +125,16 @@ public class Client {
                         }
                     } catch (Exception e){
                         callresult  = "{\"status\":\"failed\", \"message\":\"支付结果不明确, 系统异常.\", \"pay_info\":null, \"e\":"+e.toString()+"}";
+                    }finally {
+                        final String return_callresult = callresult;
+                        // 解析支付结果
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                context.onPaycallback(return_callresult);
+                            }
+                        });
                     }
-
-                    final String return_callresult = callresult;
-                    // 解析支付结果
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            context.onPaycallback(return_callresult);
-                        }
-                    });
                 }
             }
         }).start();
