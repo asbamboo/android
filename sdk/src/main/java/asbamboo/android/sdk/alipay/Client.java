@@ -41,7 +41,6 @@ public class Client {
                     Response response = request.post();
                     if(response.getIsSuccess()){
                         Map<String, Object> data    = (Map<String, Object>) response.getDecodedData().get("data");
-                        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
                         pay_params  = data.get("app_pay_json").toString();
                         Log.d("pay params", pay_params);
                     }
@@ -56,9 +55,15 @@ public class Client {
                         }
                     });
                 }else{
-                    HashMap<String, Object>  decoded_pay_params = Json.decode(pay_params);
+                    HashMap<String, Object> decoded_pay_json    = Json.decode(pay_params);
+                    String decoded_pay_gateway                  = (String) decoded_pay_json.get("gateway");
+                    HashMap<String, Object> decoded_pay_params  = (HashMap<String, Object>) decoded_pay_json.get("data");
                     StringBuilder query = new StringBuilder();
                     Iterator pay_params_iterator = decoded_pay_params.keySet().iterator();
+
+                    if(decoded_pay_gateway.contains("alipaydev.com")){
+                        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+                    }
 
                     try{
                         while(pay_params_iterator.hasNext()) {

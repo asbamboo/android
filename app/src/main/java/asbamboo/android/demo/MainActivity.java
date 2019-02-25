@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.Random;
 import java.util.TimeZone;
 
 import asbamboo.android.sdk.Configure;
+import asbamboo.android.sdk.Json;
 import asbamboo.android.sdk.tool.TradePay;
 
 public class MainActivity extends AppCompatActivity implements TradePay.AcvivityInterface {
@@ -84,6 +86,28 @@ public class MainActivity extends AppCompatActivity implements TradePay.Acvivity
     public void onPaycallback(String json)
     {
         Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
+        HashMap<String, Object> decode_json = Json.decode(json);
+        if(decode_json.get("status").equals("success")) {
+            // 支付成功
+        }else if(decode_json.get("status").equals("paying")) {
+            // 支付中
+        }else if(decode_json.get("status").equals("failed")){
+            // 支付失败
+        }else if(decode_json.get("status").equals("repeated")){
+            // 重复请求
+        }else if(decode_json.get("status").equals("user_cancel")){
+            // 用户中途取消
+        }else if(decode_json.get("status").equals("network_exception")){
+            // 网络连接出错
+        }else if(decode_json.get("status").equals("unknown")){
+            // 支付结果未知
+        }else{
+            // 系统异常
+        }
+        AlertDialog.Builder alert   = new AlertDialog.Builder(this);
+        alert.setTitle("支付结果");
+        alert.setMessage(json);
+        alert.show();
     }
 
     /**
