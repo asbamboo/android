@@ -82,7 +82,31 @@ gradle 导入方式
 
 通过SDK调起支付工具
 -------------------------------
-SDK将替你调用trade.pay接口（目前SDK仅支持两种渠道（channel）ALIPAY_APP与WXPAY_APP，然后根据响应值中的app_pay_json调起第三方支付工具。
+
+SDK将替你调用trade.pay接口（目前SDK仅支持两种渠道（channel）ALIPAY_APP与WXPAY_APP，然后根据响应值中的app_pay_json调起第三方支付工具, 在接收到支付结果后，通过回调方法 onPaycallback 告诉你支付的结果。
+
+#. 调用SDK的activity需要implements TradePay.AcvivityInterface。并且实现其中的onPaycallback方法（用来处理支付结果）
+
+    ::
+    
+        ...
+        
+        import android.support.v7.app.AppCompatActivity;
+        import asbamboo.android.sdk.tool.TradePay;
+
+        ...
+        
+        public class MainActivity extends AppCompatActivity implements TradePay.AcvivityInterface {
+
+            ***
+            
+        }
+
+#. 
+
+#. onPaycallback接收的参数是一个json字符串
+
+
 
 两行代码调起支付工具，其中实例化TradePay传递的初始化参数是一个HashMap值，具体的key请查阅trade.pay接口文档。
 
@@ -91,7 +115,6 @@ SDK将替你调用trade.pay接口（目前SDK仅支持两种渠道（channel）A
    TradePay tool   = new TradePay(tradeData(channel));
    tool.execute(this);
 
-调用SDK的activity需要implements TradePay.AcvivityInterface。并且实现其中的onPaycallback方法（用来处理支付结果），onPaycallback接收的参数是一个json字符串
 public class MainActivity extends AppCompatActivity implements TradePay.AcvivityInterface {
 
 onpaycallback中json结果的说明
