@@ -324,5 +324,9 @@ SDK将替你调用trade.pay接口（目前SDK仅支持两种渠道（channel）A
 
 * asbamboo.android.sdk.Configure.API_URL = "http://api.asbamboo.com"(生产环境)
 
+SDK支持的支付渠道
+------------------------------------------
 
+:ALIPAY_APP: 支付宝APP支付
 
+:WXPAY_APP: 微信APP支付
