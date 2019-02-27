@@ -7,7 +7,7 @@ import java.io.File;
  */
 public class Configure
 {
-    public static String API_URL = "http://developer.asbamboo.com/api";
+    public static String API_URL = "http://api.asbamboo.com";
     public static Integer HTTP_REQUEST_TIMEOUT = 30000;
     public static String HTTP_HEADER_USER_AGENT_VALUE = "ANDROID_SDK_1.0";
     public static String PROJECT_LOG_PATH;

@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -79,12 +80,14 @@ public class MainActivity extends AppCompatActivity implements TradePay.Acvivity
                 return;
         }
 
+//        Configure.API_URL   = "http://developer.asbamboo.com/api";
         TradePay tool   = new TradePay(tradeData(channel));
         tool.execute(this);
     }
 
     public void onPaycallback(String json)
     {
+        Log.d("return rep", json);
         Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
         HashMap<String, Object> decode_json = Json.decode(json);
         if(decode_json.get("status").equals("success")) {
