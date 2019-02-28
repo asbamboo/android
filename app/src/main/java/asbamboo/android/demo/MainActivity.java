@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements TradePay.Acvivity
                 return;
         }
 
-//        Configure.API_URL   = "http://developer.asbamboo.com/api";
+        Configure.API_URL   = "http://developer.asbamboo.com/api";
         TradePay tool   = new TradePay(tradeData(channel));
         tool.execute(this);
     }
