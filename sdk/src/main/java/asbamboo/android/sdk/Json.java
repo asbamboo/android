@@ -58,7 +58,15 @@ public class Json {
                 } else if (primitive.isString()) {
                     return primitive.getAsString();
                 } else if (primitive.isNumber()) {
-                    return primitive.getAsNumber();
+                    if(primitive.getAsNumber().toString().equals(String.valueOf(primitive.getAsInt()))){
+                        return primitive.getAsInt();
+                    }else if(primitive.getAsNumber().toString().equals(String.valueOf(primitive.getAsFloat()))){
+                        return primitive.getAsFloat();
+                    }else if(primitive.getAsNumber().toString().equals(String.valueOf(primitive.getAsDouble()))){
+                        return primitive.getAsDouble();
+                    }else{
+                        return primitive.getAsString();
+                    }
                 } else if (primitive.isBoolean()) {
                     return primitive.getAsBoolean();
                 } else if (primitive.isJsonNull()) {
